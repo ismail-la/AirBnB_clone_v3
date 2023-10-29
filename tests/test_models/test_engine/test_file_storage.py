@@ -10,12 +10,12 @@ from models.engine import file_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
-from models.place import Place
 from models.review import Review
+from models.place import Place
 from models.state import State
 from models.user import User
-import json
 import os
+import json
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
@@ -113,3 +113,34 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Tests the get method"""
+        from models import storage
+        state_new = State()
+        new_state_id = state_new.id
+        storage.new(state_new)
+        storage.save()
+        self.assertTrue(state_new in storage.all().values())
+        hold = storage.get(State, new_state_id)
+        self.assertEqual(state_new, hold)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """Tests for the count method"""
+        from models import storage
+        initial_count = len(storage.all())
+        count_initial_state = len(storage.all(State))
+        count_metohd = storage.count()
+        count_state = storage.count(State)
+        self.assertEqual(initial_count, count_metohd)
+        self.assertEqual(count_state, count_initial_state)
+        state_new = State()
+        storage.new(state_new)
+        storage.save()
+        count_metohd = storage.count()
+        count_state = storage.count(State)
+        self.assertEqual(initial_count + 1, count_metohd)
+        self.assertEqual(count_initial_state + 1, count_state)
+
