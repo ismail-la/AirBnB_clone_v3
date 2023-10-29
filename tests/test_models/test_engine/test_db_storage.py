@@ -67,7 +67,7 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-"""
+
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
                  'db_storage test not supported')
 class TestDBStorage(unittest.TestCase):
@@ -238,7 +238,7 @@ class TestDBStorage(unittest.TestCase):
         dbc1.close()
         cursor.close()
         db_c.close()
-"""
+
     def test_count(self):
         """Tests the count method"""
         initial_count = len(storage.all())

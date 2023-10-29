@@ -118,13 +118,13 @@ class TestFileStorage(unittest.TestCase):
     def test_get(self):
         """Tests the get method"""
         from models import storage
-        state_new = State()
-        new_state_id = state_new.id
-        storage.new(state_new)
+        new_state = State()
+        new_state_id = new_state.id
+        storage.new(new_state)
         storage.save()
-        self.assertTrue(state_new in storage.all().values())
+        self.assertTrue(new_state in storage.all().values())
         hold = storage.get(State, new_state_id)
-        self.assertEqual(state_new, hold)
+        self.assertEqual(new_state, hold)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
@@ -136,11 +136,10 @@ class TestFileStorage(unittest.TestCase):
         count_state = storage.count(State)
         self.assertEqual(initial_count, count_metohd)
         self.assertEqual(count_state, count_initial_state)
-        state_new = State()
-        storage.new(state_new)
+        new_state = State()
+        storage.new(new_state)
         storage.save()
         count_metohd = storage.count()
         count_state = storage.count(State)
         self.assertEqual(initial_count + 1, count_metohd)
         self.assertEqual(count_initial_state + 1, count_state)
-
