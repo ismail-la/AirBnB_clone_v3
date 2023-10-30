@@ -4,7 +4,6 @@
 # Imports the app_views object from the api.v1.views module.It’s likely that
 #   app_views is a blueprint that contains routes for your application.
 from api.v1.views import app_views
-
 from flask import jsonify
 from models.amenity import Amenity
 from models.city import City
