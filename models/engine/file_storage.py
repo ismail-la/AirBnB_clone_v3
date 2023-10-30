@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Contains the FileStorage class
+Holds the FileStorage class
 """
 
 import json
@@ -55,7 +55,7 @@ class FileStorage:
                 jo = json.load(f)
             for key in jo:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
+        except Exception:
             pass
 
     def delete(self, obj=None):
@@ -68,3 +68,16 @@ class FileStorage:
     def close(self):
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
+
+    def get(self, cls, id):
+        """This method retrieves an object based on its class and id"""
+        obj_model = cls.__name__ + '.' + id
+        if obj_model in self.__objects:
+            return self.__objects[obj_model]
+        return None
+
+    def count(self, cls=None):
+        """ This method counts the number of objects in storage"""
+        if cls is not None:
+            return (len(self.all(cls)))
+        return (len(self.__objects))
