@@ -132,13 +132,13 @@ class TestDBStorage(unittest.TestCase):
 
     def test_delete(self):
         """ Object is correctly deleted from database """
-        new = User(
+        t_new = User(
             email='john2020@gmail.com',
             password='password',
             first_name='John',
             last_name='Zoldyck'
         )
-        obj_key = 'User.{}'.format(new.id)
+        obj_key = 'User.{}'.format(t_new.id)
         db_c = MySQLdb.connect(
             host=os.getenv('HBNB_MYSQL_HOST'),
             port=3306,
@@ -146,10 +146,10 @@ class TestDBStorage(unittest.TestCase):
             passwd=os.getenv('HBNB_MYSQL_PWD'),
             db=os.getenv('HBNB_MYSQL_DB')
         )
-        new.save()
-        self.assertTrue(new in storage.all().values())
+        t_new.save()
+        self.assertTrue(t_new in storage.all().values())
         cursor = db_c.cursor()
-        cursor.execute('SELECT * FROM users WHERE id="{}"'.format(new.id))
+        cursor.execute('SELECT * FROM users WHERE id="{}"'.format(t_new.id))
         result = cursor.fetchone()
         self.assertTrue(result is not None)
         self.assertIn('john2020@gmail.com', result)
@@ -157,7 +157,7 @@ class TestDBStorage(unittest.TestCase):
         self.assertIn('John', result)
         self.assertIn('Zoldyck', result)
         self.assertIn(obj_key, storage.all(User).keys())
-        new.delete()
+        t_new.delete()
         self.assertNotIn(obj_key, storage.all(User).keys())
         cursor.close()
         db_c.close()
@@ -270,7 +270,7 @@ class TestDBStorage(unittest.TestCase):
 
     def test_get(self):
         """Tests for the get method"""
-        T_new = State(
+        t_new = State(
             id='oboy',
             name='lagos',
             email='bohn2020@gmail.com',
@@ -285,9 +285,9 @@ class TestDBStorage(unittest.TestCase):
             passwd=os.getenv('HBNB_MYSQL_PWD'),
             db=os.getenv('HBNB_MYSQL_DB')
         )
-        if 'State.' + T_new.id not in storage.all().keys():
-            T_new.save()
-            self.assertTrue(T_new in storage.all().values())
+        if 'State.' + t_new.id not in storage.all().keys():
+            t_new.save()
+            self.assertTrue(t_new in storage.all().values())
         db_c.close()
-        hold = storage.get(State, T_new.id)
-        self.assertEqual(T_new.id, hold.id)
+        hold = storage.get(State, t_new.id)
+        self.assertEqual(t_new.id, hold.id)
