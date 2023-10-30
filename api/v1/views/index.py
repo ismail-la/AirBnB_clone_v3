@@ -34,7 +34,7 @@ def stats():
     from models import storage
     return jsonify({'amenities': storage.count(Amenity),
                     'cities': storage.count(City),
-                    'reviews': storage.count(Review),
                     'places': storage.count(Place),
+                    'reviews': storage.count(Review),
                     'states': storage.count(State),
                     'users': storage.count(User)})
