@@ -10,6 +10,7 @@ from models.review import Review
 from models.user import User
 from models import storage
 
+
 #  The first route it supports two HTTP methods: POST and GET
 @app_views.route('/places/<place_id>/reviews', methods=['POST', 'GET'],
                  strict_slashes=False)
