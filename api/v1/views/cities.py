@@ -8,22 +8,23 @@ from models.state import State
 from models.city import City
 from models import storage
 
-# This route handles two types of HTTP requests: GET and POST
+
+# This route handles two types of HTTP requests: POST and GET
 @app_views.route('/states/<state_id>/cities', methods=['POST', 'GET'],
                  strict_slashes=False)
-def get_state_city(state_id):
+def get_city(state_id):
 
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
     if request.method == 'POST':
-        info = request.get_json(silent=True)
-        if not info:
+        information = request.get_json(silent=True)
+        if not information:
             abort(400, 'Not a JSON')
-        if 'name' not in info.keys():
+        if 'name' not in information.keys():
             abort(400, 'Missing name')
-        info['state_id'] = state_id
-        new_city = City(**info)
+        information['state_id'] = state_id
+        new_city = City(**information)
         new_city.save()
         return jsonify(new_city.to_dict()), 201
     if request.method == 'GET':
@@ -33,10 +34,10 @@ def get_state_city(state_id):
         return jsonify(city_list)
 
 
-
+# This route handles three types of HTTP requests: DELETE, GET and POST
 @app_views.route('/cities/<city_id>', methods=['DELETE', 'GET', 'PUT'],
                  strict_slashes=False)
-def handle_city(city_id):
+def city_methods(city_id):
 
     city = storage.get(City, city_id)
     if city is None:
@@ -52,10 +53,10 @@ def handle_city(city_id):
     if request.method == 'GET':
         return jsonify(city.to_dict())
     if request.method == 'PUT':
-        info = request.get_json()
-        if not info:
+        information = request.get_json()
+        if not information:
             abort(400, 'Not a JSON')
-        for key, value in info.items():
+        for key, value in information.items():
             if key in ['id', 'state_id', 'created_at', 'updated_at']:
                 pass
             else:
