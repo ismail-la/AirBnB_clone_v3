@@ -10,6 +10,7 @@ from models.place import Place
 from models.state import State
 from models.user import User
 
+
 # This route handles two types of HTTP requests: POST and GET
 @app_views.route('/cities/<city_id>/places', methods=['POST', 'GET'],
                  strict_slashes=False)
@@ -66,6 +67,7 @@ def place_object(place_id):
         place.save()
         return jsonify(place.to_dict()), 200
 
+
 # This root accepts only one type of HTTP request: POST
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def place_search():
@@ -80,7 +82,10 @@ def place_search():
     place_list = []
     count = 0
     for key in information.keys():
-        if len(information[key]) > 0 and key in ['states', 'cities', 'amenities']:
+        if (
+            len(information[key]) > 0
+            and key in ['states', 'cities', 'amenities']
+        ):
             count = 1
             break
     if len(information) == 0 or count == 0 or not information:
