@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" script that defines two Flask routes for an API that controls places"""
+"""Script that defines two Flask routes for an API that controls places"""
 
 from flask import jsonify, abort, request
 from api.v1.views import app_views
