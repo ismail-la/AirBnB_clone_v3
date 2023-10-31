@@ -19,18 +19,18 @@ def review_place_methods(place_id):
     if place is None:
         abort(404)
     if request.method == 'POST':
-        info = request.get_json(silent=True)
-        if not info:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        if 'user_id' not in info:
+        if 'user_id' not in infos:
             abort(400, 'Missing user_id')
-        user = storage.get(User, info['user_id'])
+        user = storage.get(User, infos['user_id'])
         if user is None:
             abort(404)
-        if 'text' not in info:
+        if 'text' not in infos:
             abort(400, 'Missing text')
-        info['place_id'] = place_id
-        new_review = Review(**info)
+        infos['place_id'] = place_id
+        new_review = Review(**infos)
         new_review.save()
         return jsonify(new_review.to_dict()), 201
     if request.method == 'GET':
@@ -54,10 +54,10 @@ def review_methods(review_id):
     if request.method == 'GET':
         return jsonify(review.to_dict())
     if request.method == 'PUT':
-        info = request.get_json(silent=True)
-        if not info:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        for key, value in info.items():
+        for key, value in infos.items():
             if key in ['id', 'created_at', 'updated_at', 'user_id',
                        'place_id']:
                 pass

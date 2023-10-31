@@ -24,12 +24,12 @@ def get_states():
         return jsonify(states_list)
 
     if request.method == 'POST':
-        info = request.get_json(silent=True)
-        if not info:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, description='Not a JSON')
-        if 'name' not in info:
+        if 'name' not in infos:
             abort(400, description='Missing name')
-        state = State(**info)
+        state = State(**infos)
         state.save()
         return jsonify(state.to_dict()), 201
 
@@ -59,10 +59,10 @@ def state_methods(state_id):
         return jsonify({}), 200
 
     if request.method == 'PUT':
-        info = request.get_json(silent=True)
-        if not info:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        for key, value in info.items():
+        for key, value in infos.items():
             if key in ['id', 'created_at', 'updated_at']:
                 pass
             else:

@@ -19,13 +19,13 @@ def get_city(state_id):
     if state is None:
         abort(404)
     if request.method == 'POST':
-        information = request.get_json(silent=True)
-        if not information:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        if 'name' not in information.keys():
+        if 'name' not in infos.keys():
             abort(400, 'Missing name')
-        information['state_id'] = state_id
-        new_city = City(**information)
+        infos['state_id'] = state_id
+        new_city = City(**infos)
         new_city.save()
         return jsonify(new_city.to_dict()), 201
     if request.method == 'GET':
@@ -54,10 +54,10 @@ def city_methods(city_id):
     if request.method == 'GET':
         return jsonify(city.to_dict())
     if request.method == 'PUT':
-        information = request.get_json()
-        if not information:
+        infos = request.get_json()
+        if not infos:
             abort(400, 'Not a JSON')
-        for key, value in information.items():
+        for key, value in infos.items():
             if key in ['id', 'state_id', 'created_at', 'updated_at']:
                 pass
             else:
