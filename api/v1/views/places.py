@@ -72,6 +72,7 @@ def place_object(place_id):
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def place_search():
     """
+
     Allows the client to search for places using filters: state, city, amenity
     """
     information = request.get_json(silent=True)
