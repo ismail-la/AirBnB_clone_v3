@@ -3,19 +3,11 @@
 initializing app_views
 """
 
-# Blueprints in Flask are used for modular structuring of applications.
+
 from flask import Blueprint
 
-# Creates a new blueprint named app_views.
-# The url_prefix='/api/v1' means that all routes registered with
-#  this blueprint will have URLs prefixed with /api/v1.
-app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
 
-"""
-These modules are likely to contain route handlers for different parts of your
-application (like index, states, cities, amenities, users, places,
-places_reviews, and places_amenities).
-"""
+app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
 from api.v1.views.index import *
 from api.v1.views.states import *
 from api.v1.views.cities import *
