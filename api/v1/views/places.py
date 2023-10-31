@@ -19,18 +19,18 @@ def city_places_methods(city_id):
     if city is None:
         abort(404)
     if request.method == 'POST':
-        information = request.get_json(silent=True)
-        if not information:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        if 'user_id' not in information:
+        if 'user_id' not in infos:
             abort(400, 'Missing user_id')
-        user = storage.get(User, information['user_id'])
+        user = storage.get(User, infos['user_id'])
         if user is None:
             abort(404)
-        if 'name' not in information:
+        if 'name' not in infos:
             abort(400, 'Missing name')
-        information['city_id'] = city_id
-        new_place = Place(**information)
+        infos['city_id'] = city_id
+        new_place = Place(**infos)
         new_place.save()
         return jsonify(new_place.to_dict()), 201
     if request.method == 'GET':
@@ -56,10 +56,10 @@ def place_object(place_id):
     if request.method == 'GET':
         return jsonify(place.to_dict())
     if request.method == 'PUT':
-        information = request.get_json(silent=True)
-        if not information:
+        infos = request.get_json(silent=True)
+        if not infos:
             abort(400, 'Not a JSON')
-        for key, value in information.items():
+        for key, value in infos.items():
             if key in ['id', 'created_at', 'updated_at', 'user_id', 'city_id']:
                 pass
             else:
@@ -75,28 +75,28 @@ def place_search():
 
     Allows the client to search for places using filters: state, city, amenity
     """
-    information = request.get_json(silent=True)
-    if information is None:
+    infos = request.get_json(silent=True)
+    if infos is None:
         abort(400, 'Not a JSON')
 
     places = storage.all(Place)
     place_list = []
     count = 0
-    for key in information.keys():
+    for key in infos.keys():
         if (
-            len(information[key]) > 0
+            len(infos[key]) > 0
             and key in ['states', 'cities', 'amenities']
         ):
             count = 1
             break
-    if len(information) == 0 or count == 0 or not information:
+    if len(infos) == 0 or count == 0 or not infos:
         for place in places.values():
             place_list.append(place.to_dict())
         return jsonify(place_list)
 
-    if 'amenities' in information and len(information['amenities']) > 0:
+    if 'amenities' in infos and len(infos['amenities']) > 0:
         for place in places.values():
-            for id_a in information['amenities']:
+            for id_a in infos['amenities']:
                 amenity = storage.get(Amenity, id_a)
                 if amenity in place.amenities and place not in place_list:
                     place_list.append(place)
@@ -108,17 +108,17 @@ def place_search():
         for place in places.values():
             place_list.append(place)
 
-    if 'cities' in information and len(information['cities']) > 0:
+    if 'cities' in infos and len(infos['cities']) > 0:
         place_tmp = []
-        for id_c in information['cities']:
+        for id_c in infos['cities']:
             for place in place_list:
                 if place.city_id == id_c:
                     place_tmp.append(place)
-        if 'states' in information and len(information['states']) > 0:
-            for id_s in information['states']:
+        if 'states' in infos and len(infos['states']) > 0:
+            for id_s in infos['states']:
                 state = storage.get(State, id_s)
                 for city in state.cities:
-                    if city.id in information['cities']:
+                    if city.id in infos['cities']:
                         count = 2
                         break
                 if count == 2:
@@ -129,9 +129,9 @@ def place_search():
                     if city.state_id == id_s and place not in place_tmp:
                         place_tmp.append(place)
         place_list = place_tmp
-    elif 'states' in information and len(information['states']) > 0:
+    elif 'states' in infos and len(infos['states']) > 0:
         place_tmp = []
-        for id_s in information['states']:
+        for id_s in infos['states']:
             for place in place_list:
                 city_id = place.city_id
                 city = storage.get(City, city_id)
