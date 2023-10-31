@@ -83,10 +83,7 @@ def place_search():
     place_list = []
     count = 0
     for key in infos.keys():
-        if (
-            len(infos[key]) > 0
-            and key in ['states', 'cities', 'amenities']
-        ):
+        if len(infos[key]) > 0 and key in ['states', 'cities', 'amenities']:
             count = 1
             break
     if len(infos) == 0 or count == 0 or not infos:
